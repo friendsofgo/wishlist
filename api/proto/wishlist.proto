@@ -1,0 +1,23 @@
+syntax = "proto3";
+
+package grpc;
+import "void.proto";
+
+message WishList {
+    enum WishListStatus {
+        INACTIVE = 0;
+        ACTIVE = 1;
+    }
+
+    string id = 1;
+    string name = 2;
+    WishListStatus status = 3;
+}
+
+
+
+service WishListService {
+    rpc Create(WishList) returns (stream WishList);
+    rpc List(Void) returns (WishList);
+    rpc Update(WishList) returns (WishList);
+}

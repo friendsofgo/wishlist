@@ -21,3 +21,6 @@ bin/
 
 # XCode
 *.DS_Store
+
+# Proto files
+*.pb.go

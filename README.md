@@ -24,6 +24,25 @@ The application simulate a simple wish list, we can create a list and add/modify
 
 ## Run the application
 
-*WIP*
+To compile our *proto files* on Go, first of all, we must have installed the plugin to the [protocol buffer compiler](https://github.com/golang/protobuf)
+
+```sh
+$ go get -u github.com/golang/protobuf/protoc-gen-go
+```
+
+And obviously the tool to compile our files, [`protoc`](http://google.github.io/proto-lens/installing-protoc.html)
+
+And then we could compile our files
+
+```sh
+protoc -I api/proto --go_out=plugins=grpc:internal/server/grpc api/proto/*.proto
+```
+
+or using our Makefile
+
+```sh
+make proto
+```
+
 
 
