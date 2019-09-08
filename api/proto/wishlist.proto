@@ -1,7 +1,6 @@
 syntax = "proto3";
 
 package grpc;
-import "void.proto";
 
 message WishList {
     enum WishListStatus {
@@ -14,10 +13,32 @@ message WishList {
     WishListStatus status = 3;
 }
 
+message CreateWishListReq {
+    WishList wishList = 1;
+}
 
+message CreateWishListResp {
+    WishList wishList = 1;
+}
+
+message UpdateWishListReq {
+    WishList wishList = 1;
+}
+
+message UpdateWishListResp {
+    WishList wishList = 1;
+}
+
+message ListWishListReq {
+
+}
+
+message ListWishListResp {
+    WishList wishList = 1;
+}
 
 service WishListService {
-    rpc Create(WishList) returns (stream WishList);
-    rpc List(Void) returns (WishList);
-    rpc Update(WishList) returns (WishList);
+    rpc List(ListWishListReq) returns (stream ListWishListResp);
+    rpc Create(CreateWishListReq) returns (CreateWishListResp);
+    rpc Update(UpdateWishListReq) returns (UpdateWishListResp);
 }

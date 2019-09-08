@@ -22,7 +22,7 @@ clean:
 
 # Proto parameters
 PROTO_FILES_PATH=api/proto
-PROTO_OUT=internal/server/grpc
+PROTO_OUT=internal/net/grpc
 
 proto:
 	protoc -I $(PROTO_FILES_PATH) --go_out=plugins=grpc:$(PROTO_OUT) $(PROTO_FILES_PATH)/*.proto
