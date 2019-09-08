@@ -16,3 +16,8 @@ const (
 	// Active define active wish list status
 	Active
 )
+
+// Repository provide operations above repository
+type Repository interface {
+	Create(*WishList) error
+}

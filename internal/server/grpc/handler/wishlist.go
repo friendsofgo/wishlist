@@ -3,6 +3,7 @@ package handler
 import (
 	"context"
 	"errors"
+	"log"
 
 	"github.com/friendsofgo/wishlist/internal/net/grpc"
 )
@@ -20,6 +21,7 @@ func (s *wishListHandler) List(*grpc.ListWishListReq, grpc.WishListService_ListS
 }
 
 func (s *wishListHandler) Create(context.Context, *grpc.CreateWishListReq) (*grpc.CreateWishListResp, error) {
+	log.Println("create handler")
 	return nil, errors.New("method not implemented yet")
 }
 
