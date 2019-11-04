@@ -4,45 +4,47 @@ import (
 	"fmt"
 	"net"
 
+	"github.com/friendsofgo/wishlist/internal/listing"
+
+	"github.com/friendsofgo/wishlist/internal/adding"
+	"github.com/friendsofgo/wishlist/internal/creating"
+
 	googlegrpc "google.golang.org/grpc"
 
-	"github.com/friendsofgo/wishlist/internal/net/grpc"
 	"github.com/friendsofgo/wishlist/internal/server"
 )
 
 type grpcServer struct {
-	protocol        string
-	host            string
-	port            int
-	wishListHandler grpc.WishListServiceServer
+	config          server.Config
+	creatingService creating.Service
+	addingService   adding.Service
+	listingService  listing.Service
 }
 
 func NewServer(
-	protocol string,
-	host string,
-	port int,
-	wishListHandler grpc.WishListServiceServer,
+	config server.Config,
+	cS creating.Service,
+	aS adding.Service,
+	lS listing.Service,
 ) server.Server {
-	return &grpcServer{
-		protocol: protocol,
-		host:     host,
-		port:     port,
-
-		wishListHandler: wishListHandler,
-	}
+	return &grpcServer{config: config, creatingService: cS, addingService: aS, listingService: lS}
 }
 
-func (s *grpcServer) Run() error {
-	addr := fmt.Sprintf("%s:%d", s.host, s.port)
-	listener, err := net.Listen(s.protocol, addr)
+func (s *grpcServer) Serve() error {
+	addr := fmt.Sprintf("%s:%s", s.config.Host, s.config.Port)
+	listener, err := net.Listen(s.config.Protocol, addr)
 	if err != nil {
 		return err
 	}
 
-	srv := googlegrpc.NewServer()
-	grpc.RegisterWishListServiceServer(srv, s.wishListHandler)
+	serviceServer := NewWishListServer(
+		s.creatingService,
+		s.addingService,
+		s.listingService,
+	)
+	RegisterWishListServiceServer(googlegrpc.NewServer(), serviceServer)
 
-	if err := srv.Serve(listener); err != nil {
+	if err := googlegrpc.NewServer().Serve(listener); err != nil {
 		return err
 	}
 
