@@ -5,21 +5,25 @@ import (
 	"fmt"
 	"log"
 	"os"
-	"strconv"
 	"time"
+
+	wishgrpc "github.com/friendsofgo/wishlist/internal/api/grpc"
 
 	"github.com/spf13/cobra"
 	googlegrpc "google.golang.org/grpc"
 
-	homedir "github.com/mitchellh/go-homedir"
+	"github.com/mitchellh/go-homedir"
 	"github.com/spf13/viper"
-
-	"github.com/friendsofgo/wishlist/internal/net/grpc"
 )
 
 var cfgFile string
-var cli grpc.WishListServiceClient
+var cli wishgrpc.WishListServiceClient
 var ctx context.Context
+
+const (
+	WishListServerHostDefault = "localhost"
+	WishListServerPortDefault = "3333"
+)
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
@@ -41,19 +45,19 @@ func init() {
 	cobra.OnInitialize(initConfig)
 
 	var (
-		host    = os.Getenv("WISHLIST_HOST_SERVER")
-		port, _ = strconv.Atoi(os.Getenv("WISHLIST_PORT_SERVER"))
+		host = getEnv("WISHLIST_SERVER_HOST", WishListServerHostDefault)
+		port = getEnv("WISHLIST_SERVER_PORT", WishListServerPortDefault)
 	)
 
 	ctx, _ = context.WithTimeout(context.Background(), 10*time.Second)
-	addr := fmt.Sprintf("%s:%d", host, port)
+	addr := fmt.Sprintf("%s:%s", host, port)
 	conn, err := googlegrpc.Dial(addr, googlegrpc.WithInsecure())
 
 	if err != nil {
 		log.Fatalf("impossible connect: %v", err)
 	}
 
-	cli = grpc.NewWishListServiceClient(conn)
+	cli = wishgrpc.NewWishListServiceClient(conn)
 
 }
 
@@ -79,4 +83,13 @@ func initConfig() {
 	if err := viper.ReadInConfig(); err == nil {
 		fmt.Println("Using config file:", viper.ConfigFileUsed())
 	}
+}
+
+// getEnv reads an environment variable with a default value
+func getEnv(key, fallback string) string {
+	value, exists := os.LookupEnv(key)
+	if !exists {
+		value = fallback
+	}
+	return value
 }

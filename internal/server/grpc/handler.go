@@ -3,12 +3,13 @@ package grpc
 import (
 	"context"
 
+	"github.com/friendsofgo/wishlist/internal/api/grpc"
+
 	wishlist "github.com/friendsofgo/wishlist/internal"
 
 	"github.com/friendsofgo/wishlist/internal/adding"
 	"github.com/friendsofgo/wishlist/internal/creating"
 	"github.com/friendsofgo/wishlist/internal/listing"
-	"github.com/friendsofgo/wishlist/internal/server/grpc"
 )
 
 type wishListHandler struct {
@@ -22,19 +23,19 @@ func NewWishListServer(
 	cS creating.Service,
 	aS adding.Service,
 	lS listing.Service,
-) WishListServiceServer {
+) grpc.WishListServiceServer {
 	return &wishListHandler{creatingService: cS, addingService: aS, listingService: lS}
 }
 
-func (s wishListHandler) Create(ctx context.Context, req *CreateWishListReq) (*CreateWishListResp, error) {
+func (s wishListHandler) Create(ctx context.Context, req *grpc.CreateWishListReq) (*grpc.CreateWishListResp, error) {
 	id, err := s.creatingService.Create(req.WishList.Name, wishlist.Status(req.WishList.Status))
 	if err != nil {
 		return nil, err
 	}
-	return &CreateWishListResp{WishListId: id}, nil
+	return &grpc.CreateWishListResp{WishListId: id}, nil
 }
 
-func (s wishListHandler) Add(ctx context.Context, req *AddItemReq) (*AddItemResp, error) {
+func (s wishListHandler) Add(ctx context.Context, req *grpc.AddItemReq) (*grpc.AddItemResp, error) {
 	id, err := s.addingService.AddItem(
 		req.Item.WishListId,
 		req.Item.Name,
@@ -46,15 +47,15 @@ func (s wishListHandler) Add(ctx context.Context, req *AddItemReq) (*AddItemResp
 	if err != nil {
 		return nil, err
 	}
-	return &AddItemResp{ItemId: id}, nil
+	return &grpc.AddItemResp{ItemId: id}, nil
 }
 
-func (s wishListHandler) List(ctx context.Context, req *ListWishListReq) (*ListWishListResp, error) {
+func (s wishListHandler) List(ctx context.Context, req *grpc.ListWishListReq) (*grpc.ListWishListResp, error) {
 	items, err := s.listingService.ListItems(req.WishListId)
 	if err != nil {
 		return nil, err
 	}
-	return &ListWishListResp{Items: mapSliceOfItems(items)}, nil
+	return &grpc.ListWishListResp{Items: mapSliceOfItems(items)}, nil
 }
 
 func mapSliceOfItems(domainItems []wishlist.Item) (grpcItems []*grpc.Item) {

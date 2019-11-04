@@ -44,5 +44,12 @@ or using our Makefile
 make proto
 ```
 
+## TODOs
 
-
+- Add unit & e2e testing
+- Add more features (use cases)
+- Do an extensive code review (and suggest code improvements)
+- Implement a real storage
+- Apply gRPC best practises
+- Improve error handling on gRPC layer
+- Add missing GoDoc comments

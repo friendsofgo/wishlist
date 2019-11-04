@@ -5,8 +5,7 @@ import (
 
 	"github.com/spf13/cobra"
 
-	wishlist "github.com/friendsofgo/wishlist/internal"
-	"github.com/friendsofgo/wishlist/internal/net/grpc"
+	"github.com/friendsofgo/wishlist/internal/api/grpc"
 )
 
 // createCmd represents the create command
@@ -20,7 +19,6 @@ var createCmd = &cobra.Command{
 		}
 
 		w := &grpc.WishList{
-			Id:     wishlist.UlidGen(),
 			Name:   name,
 			Status: grpc.WishList_ACTIVE,
 		}
