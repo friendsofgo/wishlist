@@ -3,28 +3,50 @@ package main
 import (
 	"log"
 	"os"
-	"strconv"
+
+	"github.com/friendsofgo/wishlist/internal/adding"
+	"github.com/friendsofgo/wishlist/internal/listing"
+
+	"github.com/friendsofgo/wishlist/internal/storage/inmemory"
+
+	"github.com/friendsofgo/wishlist/internal/creating"
+
+	"github.com/friendsofgo/wishlist/internal/server"
 
 	_ "github.com/joho/godotenv/autoload"
 
 	"github.com/friendsofgo/wishlist/internal/server/grpc"
-	"github.com/friendsofgo/wishlist/internal/server/grpc/handler"
+)
+
+const (
+	WishListServerProtocolDefault = "tcp"
+	WishListServerHostDefault     = "localhost"
+	WishListServerPortDefault     = "3333"
 )
 
 func main() {
 	var (
-		protocol = os.Getenv("WISHLIST_PROTOCOL_SERVER")
-		host     = os.Getenv("WISHLIST_HOST_SERVER")
-		port, _  = strconv.Atoi(os.Getenv("WISHLIST_PORT_SERVER"))
+		protocol = getEnv("WISHLIST_SERVER_PROTOCOL", WishListServerProtocolDefault)
+		host     = getEnv("WISHLIST_SERVER_HOST", WishListServerHostDefault)
+		port     = getEnv("WISHLIST_SERVER_PORT", WishListServerPortDefault)
+
+		repo            = inmemory.NewInMemoryWishListRepository()
+		creatingService = creating.NewService(repo)
+		addingService   = adding.NewService(repo)
+		listingService  = listing.NewService(repo)
 	)
 
-	// gRPC services
-	var (
-		wishListService = handler.NewWishList()
-	)
+	srvCfg := server.Config{Protocol: protocol, Host: host, Port: port}
+	srv := grpc.NewServer(srvCfg, creatingService, addingService, listingService)
 
-	srv := grpc.NewServer(protocol, host, port, wishListService)
+	log.Printf("gRPC server running at %s://%s:%s ...\n", protocol, host, port)
+	log.Fatal(srv.Serve())
+}
 
-	log.Printf("gRPC server running at %s://%s:%d ...\n", protocol, host, port)
-	log.Fatal(srv.Run())
+func getEnv(key, fallback string) string {
+	value, exists := os.LookupEnv(key)
+	if !exists {
+		value = fallback
+	}
+	return value
 }
