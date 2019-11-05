@@ -46,6 +46,7 @@ make proto
 
 ## TODOs
 
+- Improve `README.md` with more info (usage, etc)
 - Add unit & e2e testing
 - Add more features (use cases)
 - Do an extensive code review (and suggest code improvements)
