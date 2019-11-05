@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"net"
 
-	"github.com/friendsofgo/wishlist/internal/api/grpc"
+	"github.com/friendsofgo/wishlist/internal/net/grpc"
 
 	"github.com/friendsofgo/wishlist/internal/listing"
 
@@ -39,14 +39,15 @@ func (s *grpcServer) Serve() error {
 		return err
 	}
 
+	srv := googlegrpc.NewServer()
 	serviceServer := NewWishListServer(
 		s.creatingService,
 		s.addingService,
 		s.listingService,
 	)
-	grpc.RegisterWishListServiceServer(googlegrpc.NewServer(), serviceServer)
+	grpc.RegisterWishListServiceServer(srv, serviceServer)
 
-	if err := googlegrpc.NewServer().Serve(listener); err != nil {
+	if err := srv.Serve(listener); err != nil {
 		return err
 	}
 

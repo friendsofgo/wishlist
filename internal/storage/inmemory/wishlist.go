@@ -17,7 +17,10 @@ type inmemoryWishListRepo struct {
 }
 
 func NewInMemoryWishListRepository() wishlist.Repository {
-	return inmemoryWishListRepo{}
+	return inmemoryWishListRepo{
+		wishLists: make(map[string]wishlist.WishList),
+		items:     make(map[string][]wishlist.Item),
+	}
 }
 
 func (r inmemoryWishListRepo) Store(w wishlist.WishList) error {

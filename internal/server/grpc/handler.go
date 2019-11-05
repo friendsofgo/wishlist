@@ -3,7 +3,7 @@ package grpc
 import (
 	"context"
 
-	"github.com/friendsofgo/wishlist/internal/api/grpc"
+	"github.com/friendsofgo/wishlist/internal/net/grpc"
 
 	wishlist "github.com/friendsofgo/wishlist/internal"
 
