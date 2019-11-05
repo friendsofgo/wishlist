@@ -53,3 +53,6 @@ make proto
 - Apply gRPC best practises
 - Improve error handling on gRPC layer
 - Add missing GoDoc comments
+- Use `gateway` to expose an HTTP API
+- Use `middlewares` for observability
+- Evaluate if `id` must be provided from outside

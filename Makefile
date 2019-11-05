@@ -21,7 +21,7 @@ clean:
 
 
 # Proto parameters
-PROTO_FILES_PATH=api/proto
+PROTO_FILES_PATH=proto
 PROTO_OUT=internal/net/grpc
 
 proto:
