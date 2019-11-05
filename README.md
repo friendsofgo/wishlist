@@ -35,7 +35,7 @@ And obviously the tool to compile our files, [`protoc`](http://google.github.io/
 And then we could compile our files
 
 ```sh
-protoc -I api/proto --go_out=plugins=grpc:internal/server/grpc api/proto/*.proto
+protoc -I proto --go_out=plugins=grpc:internal/net/grpc proto/*.proto
 ```
 
 or using our Makefile
