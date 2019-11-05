@@ -7,7 +7,7 @@ import (
 	"os"
 	"time"
 
-	wishgrpc "github.com/friendsofgo/wishlist/internal/api/grpc"
+	wishgrpc "github.com/friendsofgo/wishlist/internal/net/grpc"
 
 	"github.com/spf13/cobra"
 	googlegrpc "google.golang.org/grpc"

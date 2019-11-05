@@ -5,7 +5,7 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/friendsofgo/wishlist/internal/api/grpc"
+	"github.com/friendsofgo/wishlist/internal/net/grpc"
 )
 
 // createCmd represents the create command

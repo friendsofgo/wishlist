@@ -3,7 +3,7 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/friendsofgo/wishlist/internal/api/grpc"
+	"github.com/friendsofgo/wishlist/internal/net/grpc"
 	"github.com/spf13/cobra"
 )
 
