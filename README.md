@@ -41,7 +41,7 @@ protoc -I proto --go_out=plugins=grpc:internal/net/grpc proto/*.proto
 or using our Makefile
 
 ```sh
-make proto
+make gen-proto
 ```
 
 ## TODOs

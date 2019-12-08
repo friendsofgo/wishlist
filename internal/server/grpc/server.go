@@ -4,16 +4,12 @@ import (
 	"fmt"
 	"net"
 
-	"github.com/friendsofgo/wishlist/internal/net/grpc"
-
-	"github.com/friendsofgo/wishlist/internal/listing"
-
+	grpc "github.com/friendsofgo/wishlist/genproto/go"
 	"github.com/friendsofgo/wishlist/internal/adding"
 	"github.com/friendsofgo/wishlist/internal/creating"
-
-	googlegrpc "google.golang.org/grpc"
-
+	"github.com/friendsofgo/wishlist/internal/listing"
 	"github.com/friendsofgo/wishlist/internal/server"
+	googlegrpc "google.golang.org/grpc"
 )
 
 type grpcServer struct {

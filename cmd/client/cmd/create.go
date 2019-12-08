@@ -3,9 +3,8 @@ package cmd
 import (
 	"fmt"
 
+	grpc "github.com/friendsofgo/wishlist/genproto/go"
 	"github.com/spf13/cobra"
-
-	"github.com/friendsofgo/wishlist/internal/net/grpc"
 )
 
 // createCmd represents the create command

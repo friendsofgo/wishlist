@@ -7,13 +7,11 @@ import (
 	"os"
 	"time"
 
-	wishgrpc "github.com/friendsofgo/wishlist/internal/net/grpc"
-
-	"github.com/spf13/cobra"
-	googlegrpc "google.golang.org/grpc"
-
+	wishgrpc "github.com/friendsofgo/wishlist/genproto/go"
 	"github.com/mitchellh/go-homedir"
+	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
+	googlegrpc "google.golang.org/grpc"
 )
 
 var cfgFile string
