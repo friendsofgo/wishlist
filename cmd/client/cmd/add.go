@@ -3,7 +3,7 @@ package cmd
 import (
 	"fmt"
 
-	grpc "github.com/friendsofgo/wishlist/genproto/go"
+	wishgrpc "github.com/friendsofgo/wishlist/genproto/go"
 	"github.com/spf13/cobra"
 )
 
@@ -32,16 +32,16 @@ var addCmd = &cobra.Command{
 			return err
 		}
 
-		i := &grpc.Item{
+		i := &wishgrpc.Item{
 			Name:       name,
 			WishListId: id,
 			Link:       link,
 			Price:      price,
-			Priority:   grpc.Item_LOW,
-			Status:     grpc.Item_ACTIVE,
+			Priority:   wishgrpc.Item_LOW,
+			Status:     wishgrpc.Item_ACTIVE,
 		}
 
-		res, err := cli.Add(ctx, &grpc.AddItemReq{Item: i})
+		res, err := cli.Add(ctx, &wishgrpc.AddItemReq{Item: i})
 		if err != nil {
 			return err
 		}

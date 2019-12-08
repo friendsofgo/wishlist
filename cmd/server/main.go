@@ -5,17 +5,12 @@ import (
 	"os"
 
 	"github.com/friendsofgo/wishlist/internal/adding"
-	"github.com/friendsofgo/wishlist/internal/listing"
-
-	"github.com/friendsofgo/wishlist/internal/storage/inmemory"
-
 	"github.com/friendsofgo/wishlist/internal/creating"
-
+	"github.com/friendsofgo/wishlist/internal/listing"
 	"github.com/friendsofgo/wishlist/internal/server"
-
-	_ "github.com/joho/godotenv/autoload"
-
 	"github.com/friendsofgo/wishlist/internal/server/grpc"
+	"github.com/friendsofgo/wishlist/internal/storage/inmemory"
+	_ "github.com/joho/godotenv/autoload"
 )
 
 const (

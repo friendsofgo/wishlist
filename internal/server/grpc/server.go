@@ -4,12 +4,12 @@ import (
 	"fmt"
 	"net"
 
-	grpc "github.com/friendsofgo/wishlist/genproto/go"
+	wishgrpc "github.com/friendsofgo/wishlist/genproto/go"
 	"github.com/friendsofgo/wishlist/internal/adding"
 	"github.com/friendsofgo/wishlist/internal/creating"
 	"github.com/friendsofgo/wishlist/internal/listing"
 	"github.com/friendsofgo/wishlist/internal/server"
-	googlegrpc "google.golang.org/grpc"
+	"google.golang.org/grpc"
 )
 
 type grpcServer struct {
@@ -35,13 +35,13 @@ func (s *grpcServer) Serve() error {
 		return err
 	}
 
-	srv := googlegrpc.NewServer()
+	srv := grpc.NewServer()
 	serviceServer := NewWishListServer(
 		s.creatingService,
 		s.addingService,
 		s.listingService,
 	)
-	grpc.RegisterWishListServiceServer(srv, serviceServer)
+	wishgrpc.RegisterWishListServiceServer(srv, serviceServer)
 
 	if err := srv.Serve(listener); err != nil {
 		return err

@@ -11,7 +11,7 @@ import (
 	"github.com/mitchellh/go-homedir"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
-	googlegrpc "google.golang.org/grpc"
+	"google.golang.org/grpc"
 )
 
 var cfgFile string
@@ -49,7 +49,7 @@ func init() {
 
 	ctx, _ = context.WithTimeout(context.Background(), 10*time.Second)
 	addr := fmt.Sprintf("%s:%s", host, port)
-	conn, err := googlegrpc.Dial(addr, googlegrpc.WithInsecure())
+	conn, err := grpc.Dial(addr, grpc.WithInsecure())
 
 	if err != nil {
 		log.Fatalf("impossible connect: %v", err)
