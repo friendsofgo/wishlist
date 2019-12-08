@@ -3,13 +3,17 @@ package grpc
 import (
 	"fmt"
 	"net"
+	"os"
 
 	wishgrpc "github.com/friendsofgo/wishlist/genproto/go"
 	"github.com/friendsofgo/wishlist/internal/adding"
 	"github.com/friendsofgo/wishlist/internal/creating"
 	"github.com/friendsofgo/wishlist/internal/listing"
 	"github.com/friendsofgo/wishlist/internal/server"
+	"github.com/friendsofgo/wishlist/internal/server/grpc/interceptor"
+	grpc_middleware "github.com/grpc-ecosystem/go-grpc-middleware"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/grpclog"
 )
 
 type grpcServer struct {
@@ -35,7 +39,10 @@ func (s *grpcServer) Serve() error {
 		return err
 	}
 
-	srv := grpc.NewServer()
+	grpcLog := grpclog.NewLoggerV2(os.Stdout, os.Stderr, os.Stderr)
+	grpclog.SetLoggerV2(grpcLog)
+
+	srv := grpc.NewServer(withUnaryInterceptor())
 	serviceServer := NewWishListServer(
 		s.creatingService,
 		s.addingService,
@@ -48,4 +55,11 @@ func (s *grpcServer) Serve() error {
 	}
 
 	return nil
+}
+
+func withUnaryInterceptor() grpc.ServerOption {
+	return grpc.UnaryInterceptor(grpc_middleware.ChainUnaryServer(
+		interceptor.LoggingServerInterceptor,
+		interceptor.AuthorizationServerInterceptor,
+	))
 }
