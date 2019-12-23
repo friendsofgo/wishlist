@@ -25,7 +25,7 @@ PROTO_FILES_PATH=proto
 PROTO_OUT=genproto/go
 
 gen-proto:
-	protoc -I $(PROTO_FILES_PATH) --go_out=plugins=grpc:$(PROTO_OUT) $(PROTO_FILES_PATH)/*.proto
+	protoc -I $(PROTO_FILES_PATH) -I $(GOPATH)/src/github.com/grpc-ecosystem/grpc-gateway/third_party/googleapis --go_out=plugins=grpc:$(PROTO_OUT) --grpc-gateway_out=logtostderr=true:$(PROTO_OUT) $(PROTO_FILES_PATH)/*.proto
 
 clean-proto:
 	rm -f $(PROTO_OUT)/*.pb.go

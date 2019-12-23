@@ -2,6 +2,28 @@ syntax = "proto3";
 
 package wishgrpc;
 
+import "google/api/annotations.proto";
+
+service WishListService {
+    rpc Create (CreateWishListReq) returns (CreateWishListResp) {
+        option (google.api.http) = {
+                post: "/v1/wishlist"
+                body: "wish_list"
+    };
+    }
+    rpc Add (AddItemReq) returns (AddItemResp) {
+        option (google.api.http) = {
+            post: "/v1/wishlist/{wishList_id}/item"
+            body: "item"
+    };
+    }
+    rpc List (ListWishListReq) returns (ListWishListResp) {
+        option (google.api.http) = {
+            get: "/v1/wishlist/{wishList_id}"
+    };
+    }
+}
+
 message Item {
     enum ItemPriority {
         LOW = 0;
@@ -15,7 +37,7 @@ message Item {
     }
 
     string id = 1;
-    string wishListId = 2;
+    string wishList_id = 2;
     string name = 3;
     string link = 4;
     double price = 5;
@@ -35,31 +57,26 @@ message WishList {
 }
 
 message CreateWishListReq {
-    WishList wishList = 1;
+    WishList wish_list = 1;
 }
 
 message CreateWishListResp {
-    string wishListId = 1;
+    string wishList_id = 1;
 }
 
 message AddItemReq {
-    Item item = 1;
+    string wishList_id = 1;
+    Item item = 2;
 }
 
 message AddItemResp {
-    string itemId = 1;
+    string item_id = 1;
 }
 
 message ListWishListReq {
-     string wishListId = 1;
+    string wishList_id = 1;
 }
 
 message ListWishListResp {
     repeated Item items = 1;
-}
-
-service WishListService {
-    rpc Create(CreateWishListReq) returns (CreateWishListResp);
-    rpc Add(AddItemReq) returns (AddItemResp);
-    rpc List(ListWishListReq) returns (ListWishListResp);
 }

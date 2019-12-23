@@ -1,6 +1,8 @@
 package main
 
 import (
+	"context"
+	"fmt"
 	"log"
 	"os"
 
@@ -9,8 +11,10 @@ import (
 	"github.com/friendsofgo/wishlist/internal/listing"
 	"github.com/friendsofgo/wishlist/internal/server"
 	"github.com/friendsofgo/wishlist/internal/server/grpc"
+	"github.com/friendsofgo/wishlist/internal/server/http"
 	"github.com/friendsofgo/wishlist/internal/storage/inmemory"
 	_ "github.com/joho/godotenv/autoload"
+	"golang.org/x/sync/errgroup"
 )
 
 const (
@@ -30,12 +34,28 @@ func main() {
 		addingService   = adding.NewService(repo)
 		listingService  = listing.NewService(repo)
 	)
+	ctx := context.Background()
+	ctx, cancel := context.WithCancel(ctx)
+	defer cancel()
 
-	srvCfg := server.Config{Protocol: protocol, Host: host, Port: port}
-	srv := grpc.NewServer(srvCfg, creatingService, addingService, listingService)
+	g, ctx := errgroup.WithContext(ctx)
 
-	log.Printf("gRPC server running at %s://%s:%s ...\n", protocol, host, port)
-	log.Fatal(srv.Serve())
+	g.Go(func() error {
+		srvCfg := server.Config{Protocol: protocol, Host: host, Port: port}
+		srv := grpc.NewServer(srvCfg, creatingService, addingService, listingService)
+
+		log.Printf("gRPC server running at %s://%s:%s ...\n", protocol, host, port)
+		return srv.Serve()
+	})
+	g.Go(func() error {
+		httpAddr := fmt.Sprintf(":%s", port)
+		httpSrv := http.NewServer(httpAddr)
+
+		log.Printf("HTTP server running at %s ...\n", httpAddr)
+		return httpSrv.Serve(ctx)
+	})
+
+	log.Fatal(g.Wait())
 }
 
 func getEnv(key, fallback string) string {
